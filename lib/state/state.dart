@@ -30,7 +30,17 @@ Map<String, String> sortValues = {
   'Smallest': 'smallest',
 };
 
+Map<String, String> languageValues = {
+  'All':'',
+  'English': 'en',
+  'Chinese': 'zh',
+  'Russian': 'ru',
+  'Spanish': 'es',
+  'French': 'fr',
+};
+
 List<String> fileType = ["All", "PDF", "Epub", "Cbr", "Cbz"];
+
 
 final selectedIndexProvider = StateProvider<int>((ref) => 0);
 
@@ -46,6 +56,12 @@ final selectedSortState = StateProvider<String>((ref) => "Most Relevant");
 
 final getSortValue = Provider.autoDispose<String>((ref) {
   return sortValues[ref.read(selectedSortState)] ?? '';
+});
+
+final selectedLanguageValue= StateProvider<String>((ref) => "All");
+
+final getLangValue = Provider.autoDispose<String>((ref) {
+  return languageValues[ref.read(selectedLanguageValue)] ?? '';
 });
 
 final selectedFileTypeState = StateProvider<String>((ref) => "All");
@@ -90,6 +106,7 @@ final searchProvider = FutureProvider.family
       content: ref.watch(getTypeValue),
       sort: ref.watch(getSortValue),
       fileType: ref.watch(getFileTypeValue),
+      lang : ref.watch(getLangValue),
       enableFilters: ref.watch(enableFiltersState));
   return data;
 });

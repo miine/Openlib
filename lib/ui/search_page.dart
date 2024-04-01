@@ -8,8 +8,10 @@ import 'package:openlib/state/state.dart'
         selectedTypeState,
         selectedSortState,
         selectedFileTypeState,
+        selectedLanguageValue,
         typeValues,
         fileType,
+        languageValues,
         sortValues,
         enableFiltersState;
 import 'components/snack_bar_widget.dart';
@@ -34,6 +36,7 @@ class SearchPage extends ConsumerWidget {
     final dropdownTypeValue = ref.watch(selectedTypeState);
     final dropdownSortValue = ref.watch(selectedSortState);
     final dropDownFileTypeValue = ref.watch(selectedFileTypeState);
+    final dropDownLanguageValue = ref.watch(selectedLanguageValue);
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -208,6 +211,48 @@ class SearchPage extends ConsumerWidget {
                   onChanged: (String? val) {
                     ref.read(selectedFileTypeState.notifier).state =
                         val ?? 'All';
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 7, right: 7, top: 19),
+              child: SizedBox(
+                width: 165,
+                child: DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Language',
+                    labelStyle: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 2),
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    ),
+                  ),
+                  value: dropDownLanguageValue,
+                  items: languageValues.keys
+                      .toList()
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? val) {
+                    ref.read(selectedLanguageValue.notifier).state = val ?? '';
                   },
                 ),
               ),

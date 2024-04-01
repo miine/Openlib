@@ -5,7 +5,8 @@ class Sqlite {
   static Future<Database> initDb() async {
     var databasesPath = await getDatabasesPath();
     String path = '$databasesPath/mylibrary.db';
-    bool isMobile = Platform.isAndroid || Platform.isIOS;
+    //bool isMobile = Platform.isAndroid || Platform.isIOS;
+    bool isMobile = true;
 
     Database dbInstance = await openDatabase(
       path,

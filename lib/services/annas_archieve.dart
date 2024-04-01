@@ -235,25 +235,45 @@ class AnnasArchieve {
     }
   }
 
-  String urlEncoder(
-      {required String searchQuery,
-      required String content,
-      required String sort,
-      required String fileType,
-      required bool enableFilters}) {
-    searchQuery = searchQuery.replaceAll(" ", "+");
-    if (enableFilters == false) return '$baseUrl/search?q=$searchQuery';
-    if (content == "" && sort == "" && fileType == "") {
-      return '$baseUrl/search?q=$searchQuery';
-    }
-    return '$baseUrl/search?index=&q=$searchQuery&content=$content&ext=$fileType&sort=$sort';
+ String urlEncoder({
+  required String searchQuery,
+  required String content,
+  required String sort,
+  required String fileType,
+  required String lang,
+  required bool enableFilters,
+}) {
+  searchQuery = searchQuery.replaceAll(" ", "+");
+  if (!enableFilters) return '$baseUrl/search?q=$searchQuery';
+
+  // Vérifie si tous les filtres sont vides
+  if (content.isEmpty && sort.isEmpty && fileType.isEmpty && lang.isEmpty) {
+    return '$baseUrl/search?q=$searchQuery';
   }
+
+  // Construit l'URL avec les filtres spécifiés
+  String url = '$baseUrl/search?index=&q=$searchQuery';
+  if (content.isNotEmpty) {
+    url += '&content=$content';
+  }
+  if (fileType.isNotEmpty) {
+    url += '&ext=$fileType';
+  }
+  if (sort.isNotEmpty) {
+    url += '&sort=$sort';
+  }
+  if (lang.isNotEmpty) {
+    url += '&lang=$lang';
+  }
+  return url;
+}
 
   Future<List<BookData>> searchBooks(
       {required String searchQuery,
       String content = "",
       String sort = "",
       String fileType = "",
+      String lang = "",
       bool enableFilters = true}) async {
     try {
       final String encodedURL = urlEncoder(
@@ -261,6 +281,7 @@ class AnnasArchieve {
           content: content,
           sort: sort,
           fileType: fileType,
+          lang : lang,
           enableFilters: enableFilters);
 
       final response = await dio.get(encodedURL,
